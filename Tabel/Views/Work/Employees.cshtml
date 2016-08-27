@@ -1,0 +1,14 @@
+﻿@model Tabel.ViewModels.EmployeeListViewModel
+@{
+    ViewBag.Title = "Сотрудники";
+}
+
+<h2>Employees</h2>
+
+Тут будет таблица сотрудников
+
+@foreach (var employ in Model.Employees)
+{
+    <p>@employ.Name</p>
+    <br/>
+}

@@ -1,0 +1,19 @@
+﻿@model Tabel.ViewModels.WorkIndexViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Вы успешно вошли</h2>
+
+Эта вьюха будет только для зарегистрированных пользователей
+
+Добрый день, @Model.Name!
+Ваша роль - @Model.RoleName
+@if (Model.RoleName == VariablesConfig.AdminRoleName)
+{
+    <p> и вы можете делать всё что вам заблагорассудится.</p>
+}
+else
+{
+    <p> и вы можете только забивать свои часы</p>
+}
