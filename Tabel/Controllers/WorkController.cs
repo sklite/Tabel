@@ -43,8 +43,8 @@ namespace Tabel.Controllers
 
         public ActionResult Employees()
         {
-            if (!UserLoginManager.IsLogged(Session))
-                return RedirectToAction("Index", "Home");
+            //if (!UserLoginManager.IsLogged(Session))
+            //    return RedirectToAction("Index", "Home");
 
             
             var employeeListVm = new EmployeeListViewModel();

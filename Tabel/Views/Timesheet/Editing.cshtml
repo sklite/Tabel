@@ -1,0 +1,60 @@
+﻿@using Tabel.ViewModels
+
+@{
+    ViewBag.Title = "Табель сотрудников";
+}
+
+<h2>Табель сотрудников</h2>
+
+@(Html.Kendo().Grid<TimesheetViewModel>()
+    .Name("Grid")
+    .Columns(columns =>
+    {
+        columns.Bound(p => p.Employee).Title("Имя сотрудника");
+        columns.Bound(p => p.Project).Width(140).Title("Код проекта");
+        columns.Bound(p => p.Date).Format("{0:dd.MM.yyyy}").Width(140).Title("Дата");
+        columns.Bound(p => p.Hours).Width(100).Title("Количество отработанных часов");
+        columns.Command(command => command.Destroy()).Width(110);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Create();
+        toolbar.Save();
+    })
+    .Editable(editable => editable.Mode(GridEditMode.InCell))
+    .Pageable()
+    .Navigatable()
+    .Sortable()
+    .Scrollable()
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .Batch(true)
+        .PageSize(20)
+        .ServerOperation(false)
+        .Events(events => events.Error("error_handler"))
+        .Model(model =>
+        {
+            model.Id(p => p.TimesheetId);
+            model.Field(p => p.Employee).Editable(false);
+        })
+        .Create("Editing_Create", "Timesheet")
+        .Read("Editing_Read", "Timesheet")
+        .Update("Editing_Update", "Timesheet")
+        .Destroy("Editing_Destroy", "Timesheet")
+    )
+)
+<script type="text/javascript">
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function() {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+</script>

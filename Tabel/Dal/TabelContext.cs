@@ -9,6 +9,7 @@ namespace Tabel.Dal
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<Timesheet> Timesheets { get; set; }
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -16,6 +17,7 @@ namespace Tabel.Dal
             modelBuilder.Entity<Employee>().ToTable("Employees");
             modelBuilder.Entity<Project>().ToTable("Projects");
             modelBuilder.Entity<Role>().ToTable("Roles");
+            modelBuilder.Entity<Timesheet>().ToTable("Timesheet");
         }
 
         /*

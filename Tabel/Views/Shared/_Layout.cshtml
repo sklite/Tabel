@@ -6,6 +6,22 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+	<!--This bundle was moved by the Telerik VS Extensions for compatibility reasons-->
+	@Scripts.Render("~/bundles/jquery")
+	<link href="@Url.Content("~/Content/kendo/2016.2.504/kendo.common.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@Url.Content("~/Content/kendo/2016.2.504/kendo.mobile.all.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@Url.Content("~/Content/kendo/2016.2.504/kendo.dataviz.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@Url.Content("~/Content/kendo/2016.2.504/kendo.default.min.css")" rel="stylesheet" type="text/css" />
+	<link href="@Url.Content("~/Content/kendo/2016.2.504/kendo.dataviz.default.min.css")" rel="stylesheet" type="text/css" />
+	<script src="@Url.Content("~/Scripts/kendo/2016.2.504/jquery.min.js")"></script>
+	<script src="@Url.Content("~/Scripts/kendo/2016.2.504/jszip.min.js")"></script>
+	<script src="@Url.Content("~/Scripts/kendo/2016.2.504/kendo.all.min.js")"></script>
+	<script src="@Url.Content("~/Scripts/kendo/2016.2.504/kendo.aspnetmvc.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo.modernizr.custom.js")"></script>
+    <script src="@Url.Content("~/Scripts/cultures/kendo.culture.ru-RU.min.js")"></script>
+    <script>
+        kendo.culture("ru-RU");
+    </script>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -20,7 +36,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Табель", "Tabel", "Work")</li>
+                    <li>@Html.ActionLink("Табель", "Editing", "Timesheet")</li>
                     <li>@Html.ActionLink("Сотрудники", "Employees", "Work")</li>
                     <li>@Html.ActionLink("Проекты", "Projects", "Work")</li>
                 </ul>
@@ -35,7 +51,7 @@
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
+    
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>

@@ -25,11 +25,11 @@ namespace Tabel.Models.Bll
         public static bool IsLogged(HttpSessionStateBase session)
         {
             if (!Convert.ToBoolean(session["Authorised"]))
-                return false;//RedirectToAction("Index", "Home");
+                return false;
 
             int id;
             if (!int.TryParse(session["UserId"].ToString(), out id))
-                return false;//RedirectToAction("Index", "Home");
+                return false;
 
             using (var db = new TabelContext())
             {
@@ -40,11 +40,11 @@ namespace Tabel.Models.Bll
         public static Employee GetCurrentUser(HttpSessionStateBase session)
         {
             if (!Convert.ToBoolean(session["Authorised"]))
-                return null;//RedirectToAction("Index", "Home");
+                return null;
 
             int id;
             if (!int.TryParse(session["UserId"].ToString(), out id))
-                return null;//RedirectToAction("Index", "Home");
+                return null;
 
             using (var db = new TabelContext())
             {
