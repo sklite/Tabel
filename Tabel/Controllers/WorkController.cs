@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Tabel.Dal;
 using Tabel.Models;
+using Tabel.Models.Bll;
 using Tabel.ViewModels;
 
 namespace Tabel.Controllers
@@ -14,40 +15,38 @@ namespace Tabel.Controllers
         // GET: Work
         public ActionResult Index()
         {
-            if (!Convert.ToBoolean(Session["Authorised"]))
+            
+            if (!UserLoginManager.IsLogged(Session))
                 return RedirectToAction("Index", "Home");
+            
+            var currentUser = UserLoginManager.GetCurrentUser(Session);
 
-            int id;
-            if (!int.TryParse(Session["UserId"].ToString(), out id))
-                return RedirectToAction("Index", "Home");
-            //= Convert.ToInt32(Session["UserId"]);
-
-
-            Employee employee;
-
-
-
-            using (var db = new TabelContext())
+            var userVm = new WorkIndexViewModel
             {
-                employee = db.Employees.FirstOrDefault(em => em.Id == id);
-            }
+                Mail = currentUser.Email,
+                Name = currentUser.Name,
+                RoleName = currentUser.Role.Name
+            };
 
 
-            if (employee == null)
-                return RedirectToAction("Index", "Home");
-
-
-
-            return View();
+            return View(userVm);
         }
 
         public ActionResult Tabel()
         {
+            if (!UserLoginManager.IsLogged(Session))
+                return RedirectToAction("Index", "Home");
+
+
             return View();
         }
 
         public ActionResult Employees()
         {
+            if (!UserLoginManager.IsLogged(Session))
+                return RedirectToAction("Index", "Home");
+
+            
             var employeeListVm = new EmployeeListViewModel();
 
             using (var db = new TabelContext())

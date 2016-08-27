@@ -15,12 +15,9 @@ namespace Tabel.Controllers
     {
         public ActionResult Index()
         {
-            //using (var db = new TabelContext())
-            //{
-            //    ViewBag.Name = db.Employees.First().Name;
-            //}
-
-            return View();
+            return UserLoginManager.IsLogged(Session) 
+                ? RedirectToAction("Index", "Work") 
+                : RedirectToAction("Login", "Home");
         }
 
         public ActionResult DoLogin(LoginViewModel loginData)
@@ -33,11 +30,11 @@ namespace Tabel.Controllers
             var employee = userLogin.Login(loginData);
             if (employee == null)
                 return View("Login");
- 
 
-            FormsAuthentication.SetAuthCookie(employee.Email, true);
             Session["Authorised"] = true;
             Session["UserId"] = employee.Id;
+            FormsAuthentication.SetAuthCookie(employee.Email, true);
+
             return RedirectToAction("Index", "Work");
         }
 

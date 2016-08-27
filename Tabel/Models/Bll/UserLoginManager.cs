@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Web;
 using Tabel.Dal;
 using Tabel.ViewModels;
 
@@ -16,5 +18,40 @@ namespace Tabel.Models.Bll
             }
             return result;
         }
+
+
+
+
+        public static bool IsLogged(HttpSessionStateBase session)
+        {
+            if (!Convert.ToBoolean(session["Authorised"]))
+                return false;//RedirectToAction("Index", "Home");
+
+            int id;
+            if (!int.TryParse(session["UserId"].ToString(), out id))
+                return false;//RedirectToAction("Index", "Home");
+
+            using (var db = new TabelContext())
+            {
+                return db.Employees.FirstOrDefault(em => em.Id == id) != null;
+            }
+        }
+
+        public static Employee GetCurrentUser(HttpSessionStateBase session)
+        {
+            if (!Convert.ToBoolean(session["Authorised"]))
+                return null;//RedirectToAction("Index", "Home");
+
+            int id;
+            if (!int.TryParse(session["UserId"].ToString(), out id))
+                return null;//RedirectToAction("Index", "Home");
+
+            using (var db = new TabelContext())
+            {
+                return db.Employees.Include("Role").FirstOrDefault(em => em.Id == id);
+            }
+        }
+
+
     }
 }
