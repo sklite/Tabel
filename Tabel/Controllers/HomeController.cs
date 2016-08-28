@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Tabel.Dal;
 using Tabel.Models;
-using Tabel.Models.Bll;
 using Tabel.ViewModels;
 
 namespace Tabel.Controllers
@@ -15,6 +14,7 @@ namespace Tabel.Controllers
     {
         public ActionResult Index()
         {
+
             return UserLoginManager.IsLogged(Session) 
                 ? RedirectToAction("Index", "Work") 
                 : RedirectToAction("Login", "Home");
@@ -33,6 +33,9 @@ namespace Tabel.Controllers
 
             Session["Authorised"] = true;
             Session["UserId"] = employee.Id;
+            if (employee.Role.Name == VariablesConfig.AdminRoleName)
+                Session["IsAdmin"] = true;
+            
             FormsAuthentication.SetAuthCookie(employee.Email, true);
 
             return RedirectToAction("Index", "Work");
@@ -41,6 +44,16 @@ namespace Tabel.Controllers
         public ActionResult Login(LoginViewModel loginData)
         {
             return View(loginData);
+        }
+
+        public ActionResult Logoff()
+        {
+
+            Session.Clear();
+            //Session["Authorised"] = false;
+            //Session["UserId"] = null;
+            
+            return RedirectToAction("Index", "Home");
         }
 
 

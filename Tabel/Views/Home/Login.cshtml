@@ -13,9 +13,6 @@
 @using (Html.BeginForm("DoLogin", "Home"))
 {
     @Html.EditorForModel();
-
-    @*@(Html.Kendo().Button()
-    .Name("Enter")
-    )*@
+    <br/>
     <input type="submit" value="Войти" class="k-primary k-button" />
 }

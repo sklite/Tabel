@@ -1,0 +1,62 @@
+﻿@using Tabel.ViewModels.Project
+
+@{
+    ViewBag.Title = "Редактор проектов";
+}
+
+<h2>Редактор проектов</h2>
+
+
+@(Html.Kendo().Grid<ProjectViewModel>()
+    .Name("Grid")
+    .Columns(columns =>
+    {
+
+        columns.Bound(p => p.Code).Title("Код проекта");
+        //columns.Bound(p => p.).Title("Почта");
+        //columns.Bound(p => p.Rate).Title("Ставка");
+
+        columns.Command(command => command.Destroy()).Width(110);
+    })
+    .ToolBar(toolbar =>
+    {
+        toolbar.Create();
+        toolbar.Save();
+    })
+    .Editable(editable => editable.Mode(GridEditMode.InCell))
+    .Pageable()
+    .Navigatable()
+    .Sortable()
+    .Scrollable()
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .Batch(true)
+        .PageSize(20)
+        .ServerOperation(false)
+        .Events(events => events.Error("error_handler"))
+        .Model(model =>
+        {
+            model.Id(p => p.ProjectId);
+            //model.Field(p => p.RoleId).DefaultValue(1);
+        })
+        .Create("Editing_Create", "Project")
+        .Read("Editing_Read", "Project")
+        .Update("Editing_Update", "Project")
+        .Destroy("Editing_Destroy", "Project")
+    )
+)
+<script type="text/javascript">
+    function error_handler(e) {
+        if (e.errors) {
+            var message = "Errors:\n";
+            $.each(e.errors, function (key, value) {
+                if ('errors' in value) {
+                    $.each(value.errors, function() {
+                        message += this + "\n";
+                    });
+                }
+            });
+            alert(message);
+        }
+    }
+</script>

@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using Tabel.Dal;
 using Tabel.Models;
-using Tabel.Models.Bll;
 using Tabel.ViewModels;
 
 namespace Tabel.Controllers
@@ -30,7 +29,7 @@ namespace Tabel.Controllers
 
 
             return View(userVm);
-        }
+        } 
 
         public ActionResult Tabel()
         {
@@ -49,16 +48,16 @@ namespace Tabel.Controllers
             
             var employeeListVm = new EmployeeListViewModel();
 
-            using (var db = new TabelContext())
-            {
-                foreach (var employee in db.Employees)
-                {
-                    employeeListVm.Employees.Add(new EmployeeViewModel
-                    {
-                        Name = employee.Name
-                    });
-                }
-            }
+            //using (var db = new TabelContext())
+            //{
+            //    foreach (var employee in db.Employees)
+            //    {
+            //        employeeListVm.Employees.Add(new EmployeeViewModel
+            //        {
+            //            Name = employee.Name
+            //        });
+            //    }
+            //}
 
             return View(employeeListVm);
         }

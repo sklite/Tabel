@@ -8,42 +8,49 @@ using Kendo.Mvc.Extensions;
 using Kendo.Mvc.UI;
 using Tabel.Dal;
 using Tabel.ViewModels;
+using Tabel.ViewModels.Timesheet;
 
 namespace Tabel.Controllers
 {
     public class TimesheetController : Controller
     {
 
+        TimesheetService _timesheetService = new TimesheetService(new TabelContext());
 
-        TimesheetService timesheetService = new TimesheetService(new TabelContext());
-
-        public TimesheetController()
-        {
-            //timesheetService = new TimesheetService(/*new TabelContext()*/);
-        }
 
         // GET: Timesheet
-        public ActionResult Editing()
+        public ActionResult Edit()
         {
+            if (!UserLoginManager.IsLogged(Session))
+                return RedirectToAction("Index", "Home");
+
+                ViewData["employees"] = _timesheetService.GetEmployeeNames();
+            ViewData["projects"] = _timesheetService.GetProjectNames();
             return View();
         }
 
         public ActionResult Editing_Read([DataSourceRequest] DataSourceRequest request)
         {
-            return Json(timesheetService.Read().ToDataSourceResult(request));
+            
+
+
+            _timesheetService.UserId = Convert.ToInt32(Session["UserId"]);
+            _timesheetService.IsAdmin = Convert.ToBoolean(Session["IsAdmin"]);
+
+            return Json(_timesheetService.Read().ToDataSourceResult(request));
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Editing_Create([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<TimesheetViewModel> products)
+        public ActionResult Editing_Create([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<TimesheetViewModel> timesheets)
         {
             var results = new List<TimesheetViewModel>();
 
-            if (products != null && ModelState.IsValid)
+            if (timesheets != null && ModelState.IsValid)
             {
-                foreach (var product in products)
+                foreach (var timesheet in timesheets)
                 {
-                    timesheetService.Create(product);
-                    results.Add(product);
+                    _timesheetService.Create(timesheet);
+                    results.Add(timesheet);
                 }
             }
 
@@ -51,31 +58,31 @@ namespace Tabel.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Editing_Update([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<TimesheetViewModel> products)
+        public ActionResult Editing_Update([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<TimesheetViewModel> timesheets)
         {
-            if (products != null && ModelState.IsValid)
+            if (timesheets != null && ModelState.IsValid)
             {
-                foreach (var product in products)
+                foreach (var timesheet in timesheets)
                 {
-                    timesheetService.Update(product);
+                    _timesheetService.Update(timesheet);
                 }
             }
 
-            return Json(products.ToDataSourceResult(request, ModelState));
+            return Json(timesheets.ToDataSourceResult(request, ModelState));
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Editing_Destroy([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<TimesheetViewModel> products)
+        public ActionResult Editing_Destroy([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<TimesheetViewModel> timesheets)
         {
-            if (products.Any())
+            if (timesheets.Any())
             {
-                foreach (var product in products)
+                foreach (var timesheet in timesheets)
                 {
-                    timesheetService.Destroy(product);
+                    _timesheetService.Destroy(timesheet);
                 }
             }
 
-            return Json(products.ToDataSourceResult(request, ModelState));
+            return Json(timesheets.ToDataSourceResult(request, ModelState));
         }
     }
 

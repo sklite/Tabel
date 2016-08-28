@@ -15,6 +15,6 @@ namespace Tabel.ViewModels
         [Display(Name="Пароль")]
         public string Password { get; set; }
 
-        public bool Success { get; set; }
+        //public bool Success { get; set; }
     }
 }

@@ -35,11 +35,21 @@
                 @Html.ActionLink("Табель работы сотрудников", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Табель", "Editing", "Timesheet")</li>
-                    <li>@Html.ActionLink("Сотрудники", "Employees", "Work")</li>
-                    <li>@Html.ActionLink("Проекты", "Projects", "Work")</li>
-                </ul>
+                @if (Convert.ToBoolean(Session["Authorised"]))
+                {
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Табель", "Edit", "Timesheet")</li>
+                        @if (Convert.ToBoolean(Session["IsAdmin"]))
+                        {
+                            <li>@Html.ActionLink("Сотрудники", "Edit", "Employee")</li>
+                            <li>@Html.ActionLink("Проекты", "Edit", "Project")</li>
+                        }
+                    </ul>
+
+                    <div style="float: right;">
+                        @Html.ActionLink("Выйти", "Logoff", "Home")
+                    </div>
+                }
             </div>
         </div>
     </div>

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
-using Tabel.Dal;
+using Tabel.Models;
 using Tabel.ViewModels;
 
-namespace Tabel.Models.Bll
+namespace Tabel.Dal
 {
     public class UserLoginManager
     {
@@ -13,15 +13,13 @@ namespace Tabel.Models.Bll
             Employee result;
             using (var db = new TabelContext())
             {
-                result = db.Employees.FirstOrDefault(em => em.Email == loginVm.Login
+                result = db.Employees.Include("Role").FirstOrDefault(em => em.Email == loginVm.Login
                                                            && em.Pass == loginVm.Password);
             }
             return result;
         }
 
-
-
-
+        
         public static bool IsLogged(HttpSessionStateBase session)
         {
             if (!Convert.ToBoolean(session["Authorised"]))
@@ -50,6 +48,17 @@ namespace Tabel.Models.Bll
             {
                 return db.Employees.Include("Role").FirstOrDefault(em => em.Id == id);
             }
+        }
+
+        public static bool IsUserManager(int userId, TabelContext context)
+        {
+           // using (var db = new TabelContext())
+            //{
+                var employee = context.Employees.Include("Role").FirstOrDefault(em => em.Id == userId);
+                if (employee == null)
+                    return false;
+                return employee.Role.Name == VariablesConfig.AdminRoleName;
+            //}
         }
 
 

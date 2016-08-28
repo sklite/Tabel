@@ -1,4 +1,5 @@
 ﻿@using Tabel.ViewModels
+@using Tabel.ViewModels.Timesheet
 
 @{
     ViewBag.Title = "Табель сотрудников";
@@ -10,10 +11,10 @@
     .Name("Grid")
     .Columns(columns =>
     {
-        columns.Bound(p => p.Employee).Title("Имя сотрудника");
-        columns.Bound(p => p.Project).Width(140).Title("Код проекта");
+        columns.ForeignKey(p => p.EmployeeId, (System.Collections.IEnumerable)ViewData["employees"], "EmployeeId", "EmployeeName").Title("Имя сотрудника");
+        columns.ForeignKey(p => p.ProjectId, (System.Collections.IEnumerable)ViewData["projects"], "ProjectId", "ProjectName").Width(140).Title("Код проекта");
         columns.Bound(p => p.Date).Format("{0:dd.MM.yyyy}").Width(140).Title("Дата");
-        columns.Bound(p => p.Hours).Width(100).Title("Количество отработанных часов");
+        columns.Bound(p => p.Hours).Width(100).Title("Часы");
         columns.Command(command => command.Destroy()).Width(110);
     })
     .ToolBar(toolbar =>
@@ -35,7 +36,8 @@
         .Model(model =>
         {
             model.Id(p => p.TimesheetId);
-            model.Field(p => p.Employee).Editable(false);
+            model.Field(p => p.EmployeeId).DefaultValue(1);
+            model.Field(p => p.ProjectId).DefaultValue(1);
         })
         .Create("Editing_Create", "Timesheet")
         .Read("Editing_Read", "Timesheet")
