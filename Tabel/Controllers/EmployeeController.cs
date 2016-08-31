@@ -30,16 +30,16 @@ namespace Tabel.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Editing_Create([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<EmployeeViewModel> projects)
+        public ActionResult Editing_Create([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<EmployeeViewModel> employees)
         {
             var results = new List<EmployeeViewModel>();
 
-            if (projects != null && ModelState.IsValid)
+            if (employees != null && ModelState.IsValid)
             {
-                foreach (var project in projects)
+                foreach (var employee in employees)
                 {
-                    _employeeService.Create(project);
-                    results.Add(project);
+                    _employeeService.Create(employee);
+                    results.Add(employee);
                 }
             }
 
@@ -47,31 +47,31 @@ namespace Tabel.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Editing_Update([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<EmployeeViewModel> projects)
+        public ActionResult Editing_Update([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<EmployeeViewModel> employees)
         {
-            if (projects != null && ModelState.IsValid)
+            if (employees != null && ModelState.IsValid)
             {
-                foreach (var project in projects)
+                foreach (var employee in employees)
                 {
-                    _employeeService.Update(project);
+                    _employeeService.Update(employee);
                 }
             }
 
-            return Json(projects.ToDataSourceResult(request, ModelState));
+            return Json(employees.ToDataSourceResult(request, ModelState));
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public ActionResult Editing_Destroy([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<EmployeeViewModel> projects)
+        public ActionResult Editing_Destroy([DataSourceRequest] DataSourceRequest request, [Bind(Prefix = "models")]IEnumerable<EmployeeViewModel> employees)
         {
-            if (projects.Any())
+            if (employees.Any())
             {
-                foreach (var project in projects)
+                foreach (var employee in employees)
                 {
-                    _employeeService.Destroy(project);
+                    _employeeService.Destroy(employee);
                 }
             }
 
-            return Json(projects.ToDataSourceResult(request, ModelState));
+            return Json(employees.ToDataSourceResult(request, ModelState));
         }
 
     }

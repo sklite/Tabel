@@ -27,10 +27,11 @@
     .Navigatable()
     .Sortable()
     .Scrollable()
+    .HtmlAttributes(new { style = "height: 800px" })
     .DataSource(dataSource => dataSource
         .Ajax()
         .Batch(true)
-        .PageSize(20)
+        .PageSize(40)
         .ServerOperation(false)
         .Events(events => events.Error("error_handler"))
         .Model(model =>
@@ -38,6 +39,8 @@
             model.Id(p => p.TimesheetId);
             model.Field(p => p.EmployeeId).DefaultValue(1);
             model.Field(p => p.ProjectId).DefaultValue(1);
+            model.Field(p => p.Hours).DefaultValue(2);
+            //model.Field(p => p.)
         })
         .Create("Editing_Create", "Timesheet")
         .Read("Editing_Read", "Timesheet")

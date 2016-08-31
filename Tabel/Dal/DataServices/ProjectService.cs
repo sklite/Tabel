@@ -18,6 +18,7 @@ namespace Tabel.Dal.DataServices
             var result = _tabelContext.Projects.Select(prj => new ProjectViewModel
             {
                 Code = prj.Name,
+                WorkObject = prj.WorkObject,
                 ProjectId = prj.Id
             });
             return result;
@@ -28,6 +29,7 @@ namespace Tabel.Dal.DataServices
             var project = new Project
             {
                 Name = dataToCreate.Code,
+                WorkObject = dataToCreate.WorkObject
             };
             _tabelContext.Projects.Add(project);
             _tabelContext.SaveChanges();
@@ -39,6 +41,7 @@ namespace Tabel.Dal.DataServices
             if (edited == null)
                 return;
             edited.Name = dataToUpdate.Code;
+            edited.WorkObject = dataToUpdate.WorkObject;
             _tabelContext.SaveChanges();
         }
 

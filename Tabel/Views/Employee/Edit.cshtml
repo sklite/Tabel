@@ -16,7 +16,6 @@
         columns.ForeignKey(p => p.RoleId, (System.Collections.IEnumerable)ViewData["roles"], "RoleId", "RoleName").Title("Роль");
         columns.Bound(p => p.Email).Title("Почта");
         columns.Bound(p => p.Rate).Title("Ставка");
-
         columns.Command(command => command.Destroy()).Width(110);
     })
     .ToolBar(toolbar =>

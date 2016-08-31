@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Input";
+}
+
+<h2>Введите даты за которые нужно построить отчёт</h2>
+
+
+@using (Html.BeginForm("View", "Report", FormMethod.Get))
+{
+    <div>
+        <table>
+            <tr>
+                <td>
+                    Дата начала отчёта
+                </td>
+                <td>
+                    @(Html.Kendo().DatePicker()
+                        .Name("dateBegin")
+                        .Value(DateTime.Now.AddMonths(-1))
+                        //.HtmlAttributes(new {style = "width:100%;"}
+                        )
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Дата конца отчёта
+                </td>
+                <td>
+                    @(Html.Kendo().DatePicker()
+                      .Name("dateEnd")
+                      .Value(DateTime.Now)
+                      //.HtmlAttributes(new {style = "width:100%;"}
+                    )
+                </td>
+            </tr>
+
+        </table>
+        @(Html.Kendo().Button()
+              .Name("makeReport")
+              .HtmlAttributes(new {type = "submit", @class = "k-primary"})
+              .Content("Сделать отчёт"))
+    </div>
+}

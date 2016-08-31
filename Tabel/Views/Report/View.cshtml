@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewBag.Title = "View";
+}
+
+@using Microsoft.Ajax.Utilities
+@using Tabel.ViewModels.Report
+@model IEnumerable<ReportViewModel>
+
+<div class="responsive-message"></div>
+<br/>
+@(Html.Kendo().PivotConfigurator()
+    .Name("configurator")
+    .HtmlAttributes(new { @class = "hidden-on-narrow" })
+    .Height(570)
+)
+
+
+@(Html.Kendo().PivotGrid<ReportViewModel>()
+    .Name("pivotgrid")
+    .HtmlAttributes(new { @class = "hidden-on-narrow" })
+    .Configurator("#configurator")
+    .ColumnWidth(150)
+    .Height(370)
+    .BindTo(Model)
+    .DataSource(dataSource => dataSource
+        .Ajax()
+        .Schema(schema => schema
+            .Model(m => m.Field("Date", typeof(DateTime)).From("Date"))
+            .Cube(cube => cube
+                .Dimensions(dimensions =>
+                {
+                    dimensions.Add(model => model.EmployeeName).Caption("Сотрудники");
+                    dimensions.Add("Date").Caption("Даты");
+                    dimensions.Add(model => model.ProjectCode).Caption("Проекты");
+                })
+                .Measures(measures =>
+                {
+                    //measures.Add("Average").Format("{0:c}").Field(model => model.UnitPrice).AggregateName("average");
+                    //measures.Add("Sum")/*.Format("{0:c}")*/.Field(model => model.Hours).AggregateName("sum");
+                    measures.Add("Часы").Field(model => model.Hours).AggregateName("sum");
+                    measures.Add("Деньги").Field(model => model.Money).AggregateName("sum");//.Result("sum");
+                    
+                })
+            )
+            )
+        .Columns(columns =>
+        {
+            columns.Add("Date").Expand(true);
+        })
+        .Rows(rows =>
+        {
+            rows.Add("ProjectCode").Expand(true);
+            rows.Add("EmployeeName").Expand(true);
+        })
+        //.Measures(measures => measures.Values("Sum"))
+        .Measures(measures =>
+        {
+            measures.Values("Часы");
+            measures.Values("Деньги");
+        })
+        .Events(e => e.Error("onError"))
+    )
+      )
+
+<br/>
+
+
+<script>
+    function onError(e) {
+        alert("error: " + kendo.stringify(e.errors[0]));
+    }
+</script>
+
+<style>
+    #pivotgrid {
+        display: inline-block;
+        vertical-align: top;
+        width: 100%;
+    }
+
+    #configurator {
+        display: inline-block;
+        vertical-align: top;
+    }
+
+    .hidden-on-narrow {
+        display: inline-block;
+        vertical-align: top;
+    }
+</style>

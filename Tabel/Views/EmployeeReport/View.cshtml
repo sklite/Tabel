@@ -1,0 +1,73 @@
+﻿@model Tabel.ViewModels.EmployeeReportViewModel
+@{
+    ViewBag.Title = "Отчёт по сотрудникам";
+}
+
+<h2>Отчёт по сотрудникам</h2>
+
+
+
+
+@(Html.Kendo().Grid(Model.Rows)
+    .Name("testGrid")
+     //.ToolBar(tools => tools.Excel())
+    .Groupable(groupable =>
+    {
+        groupable.Enabled(true);
+        //groupable.Messages()
+    })
+    .Excel(excel => excel
+        .FileName("Kendo UI Grid Export.xlsx")
+        .Filterable(true)
+        .ProxyURL(Url.Action("Excel_Export_Save", "EmployeeReport")))
+    //.Scrollable(ss =>
+    //{
+    //    ss.Enabled(true);
+    //    ss.Virtual(false);
+    //})
+    .Columns(columns =>
+    {
+        columns.Bound(r => r.Name).Title("Имя");
+        columns.Bound(r => r.Project).Title("Проект");
+
+        
+
+        for (int i = 0; i < Model.MyColumns.Count; i++)
+        {
+            var index = i;
+
+            //columns.Template("123")
+
+
+            //columns.Template(@<text>@item.Hours[index].ToString("c")</text>).Title("<span class='verticalText'>"+ Model.MyColumns[i]+ "</span>");
+            columns.Template(@<text>@item.Hours[index].ToString()</text>).Title("<span class='verticalText'>" + Model.MyColumns[i] + "</span>");
+
+        }
+        columns.Bound(r => r.Money).Format("{0:C}").Title("Деньги");//.ClientFooterTemplate("Total Count: #=count#");
+
+    })
+    //.DataSource(dataSource => dataSource
+    //    .Ajax()
+    //    .PageSize(20)
+    //    .ServerOperation(true)
+    //    .Read(read => read.Action("View", "EmployeeReport"))
+    //    .Aggregates(aggr =>
+    //    {
+    //        aggr.Add()
+    //    })
+    // )
+    )
+
+
+@*@(Html.Kendo().Grid(Model.Rows)
+    .Name("testGrid")
+    .Columns(columns =>
+    {
+        columns.Bound(r => r.Name).Title("Type");
+        for (int i = 0; i < Model.MyColumns.Count; i++)
+        {
+            var index = i;
+            columns.Template(@<text>@item.Hours[index].ToString("c")</text>).Title(Model.MyColumns[i]);
+        }
+    })
+)*@

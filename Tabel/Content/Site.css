@@ -22,3 +22,17 @@ select,
 textarea {
     max-width: 280px;
 }
+
+#testGrid .k-grid-header .k-header .verticalText{
+  display: inline-block;
+  white-space: nowrap;
+  transform: translate(0,100%) rotate(-90deg);
+  transform-origin: 0 0;
+  position: absolute;
+  /*bottom: 5px;*/
+}
+
+
+#testGrid .k-grid-header .k-header{
+  height: 90px !important;
+}

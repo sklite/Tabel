@@ -52,13 +52,10 @@ namespace Tabel.Dal
 
         public static bool IsUserManager(int userId, TabelContext context)
         {
-           // using (var db = new TabelContext())
-            //{
-                var employee = context.Employees.Include("Role").FirstOrDefault(em => em.Id == userId);
-                if (employee == null)
-                    return false;
-                return employee.Role.Name == VariablesConfig.AdminRoleName;
-            //}
+            var employee = context.Employees.Include("Role").FirstOrDefault(em => em.Id == userId);
+            if (employee == null)
+                return false;
+            return employee.Role.Name == VariablesConfig.AdminRoleName;
         }
 
 

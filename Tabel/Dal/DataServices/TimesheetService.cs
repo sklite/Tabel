@@ -54,7 +54,8 @@ namespace Tabel.Dal
             return _tabelContext.Projects.Select(proj => new TsProjectViewModel()
             {
                 ProjectId = proj.Id,
-                ProjectName = proj.Name
+                ProjectName = proj.Name,
+
             });
         }
 

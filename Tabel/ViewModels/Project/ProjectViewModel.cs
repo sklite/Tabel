@@ -9,6 +9,7 @@ namespace Tabel.ViewModels.Project
     {
         public int ProjectId { get; set; }
         public string Code { get; set; }
+        public string WorkObject { get; set; }
 
     }
 }
