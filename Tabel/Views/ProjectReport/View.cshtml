@@ -1,16 +1,16 @@
-﻿@model Tabel.ViewModels.EmployeeReportViewModel
+﻿@model Tabel.ViewModels.ProjectReport.ProjectReportViewModel
 @{
-    ViewBag.Title = "Отчёт по сотрудникам";
+    ViewBag.Title = "Отчёт по проектам";
 }
 
-<h2>Отчёт по сотрудникам</h2>
+<h2>Отчёт по проектам</h2>
 
 
 
 Введите даты за которые нужно построить отчёт
 
 
-@using (Html.BeginForm("View", "EmployeeReport", FormMethod.Get))
+@using (Html.BeginForm("View", "ProjectReport", FormMethod.Get))
 {
     <div>
         <table>
@@ -25,9 +25,7 @@
                     )
                 </td>
             </tr>
-            <tr>
-                
-            </tr>
+            <tr></tr>
             <tr>
                 <td>
                     Дата конца отчёта
@@ -37,12 +35,12 @@
                           .Name("dateEnd")
                           .Value(DateTime.Now)
                           //.HtmlAttributes(new {style = "width:100%;"}
-                          )
+                    )
                 </td>
             </tr>
             <tr>
                 <td>
-                    <input type="submit" name="command" value="Отобразить отчёт"  class="k-primary k-button" />
+                    <input type="submit" name="command" value="Отобразить отчёт" class="k-primary k-button" />
                 </td>
                 <td>
                     <input type="submit" name="command" value="Загрузить Excel" class="k-primary k-button" />
@@ -52,20 +50,19 @@
     </div>
 }
 
-<br/>
+<br />
 
 @(Html.Kendo().Grid(Model.Rows)
     .Name("testGrid")
     .Scrollable(gg => gg.Enabled(true))
     .HtmlAttributes(new { style = "height:" + Model.Rows.Count * 50 + "px;width:100%" })
-    
+
 
     .Columns(columns =>
     {
-        columns.Bound(r => r.Name).Title("<b>Имя</b>").Filterable(ftb => ftb.Cell(cell => cell.ShowOperators(false))).Width(100);
         columns.Bound(r => r.Project).Title("<b>Проект</b>").Width(150);
         columns.Bound(r => r.WorkObject).Title("<b>Объект</b>").Width(120);
-
+        columns.Bound(r => r.Name).Title("<b>Имя</b>").Filterable(ftb => ftb.Cell(cell => cell.ShowOperators(false))).Width(100);
 
 
         for (int i = 0; i < Model.MyColumns.Count; i++)

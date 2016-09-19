@@ -1,18 +1,20 @@
 ﻿@model Tabel.ViewModels.LoginViewModel
 @{
     ViewBag.Title = "Логин";
+    ViewBag.Container = "container";
 }
 
 <h2>
     Введите ваш логин и пароль
 </h2>
-    <br />
-    логин = sklite@ya.ru<br />
-    пароль = 123<br />
+<br />
+логин = sklite@ya.ru<br />
+пароль = 123<br />
 
 @using (Html.BeginForm("DoLogin", "Home"))
 {
     @Html.EditorForModel();
-    <br/>
+    <br />
     <input type="submit" value="Войти" class="k-primary k-button" />
 }
+

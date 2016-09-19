@@ -1,29 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Tabel.ViewModels
+namespace Tabel.ViewModels.ProjectReport
 {
-    public class EmployeeReportViewModel : IDataEditViewModel
+    public class ProjectReportViewModel : IDataEditViewModel
     {
-        public List<ErEmployeeViewModel> Rows { get; set; }
+        public List<PrProjectViewModel> Rows { get; set; }
 
 
-        public List<string> MyColumns { get; set; } 
+        public List<string> MyColumns { get; set; }
     }
 
-    public class ErEmployeeViewModel
+    public class PrProjectViewModel
     {
         double totalMoney = 0;
 
-        public ErEmployeeViewModel(double totalMoney)
+        public PrProjectViewModel(double totalMoney)
         {
             this.totalMoney = totalMoney;
         }
 
-        public ErEmployeeViewModel()
+        public PrProjectViewModel()
         {
-            
+
+        }
+
+        public void SetTotalMoney(double totalMoney)
+        {
+            this.totalMoney = totalMoney;
         }
 
 
@@ -34,11 +38,12 @@ namespace Tabel.ViewModels
         public string WorkObject { get; set; }
 
         public double Rate { get; set; }
-        public double Money {
+        public double Money
+        {
             get
             {
                 if (totalMoney == 0)
-                    return Rate*(Hours.Sum());
+                    return Rate * (Hours.Sum());
                 return totalMoney;
             }
         }

@@ -1,28 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.AccessControl;
 using Tabel.ViewModels;
+using Tabel.ViewModels.ProjectReport;
 
 namespace Tabel.Dal.DataServices
 {
-    public class EmployeeReportService
+    public class ProjectReportService
     {
         TabelContext _tabelContext;
 
 
-        public EmployeeReportService(TabelContext context)
+        public ProjectReportService(TabelContext context)
         {
             _tabelContext = context;
             DateBegin = DateTime.Today.AddDays(-15);
             DateEnd = DateTime.Today;
         }
 
-        public EmployeeReportViewModel GetData()
+        public ProjectReportViewModel GetData()
         {
-            var result = new EmployeeReportViewModel();
+            var result = new ProjectReportViewModel();
 
-            
+
             var span = DateEnd - DateBegin;
 
             int countDays = span.Days;
@@ -57,44 +57,45 @@ namespace Tabel.Dal.DataServices
                 reportDays.Add(DateBegin.AddDays(i));
             }
 
-            var allEmployees = neededData.Select(data => data.EmployeeName).Distinct();
+            var allProjects = neededData.Select(data => data.Project).Distinct();
 
-            var employeeProjectDict = new Dictionary<string, List<string>>();
+            var projectEmployeeDict = new Dictionary<string, List<string>>();
 
-
-            foreach (var employee in allEmployees)
+            //у этого проекта такие то сотрудники
+            foreach (var project in allProjects)
             {
-                employeeProjectDict[employee] =
-                    neededData.Where(data => data.EmployeeName == employee).Select(data => data.Project).Distinct().ToList();
+                projectEmployeeDict[project] = neededData.Where(data => data.Project == project).Select(data => data.EmployeeName).Distinct().ToList();
             }
 
             //Заполняем тут данные о сотрудниках и проектах
-            List<ErReportEmployee> reportEmployee = new List<ErReportEmployee>();
-            foreach (var employeeProject in employeeProjectDict)
+            List<PrReportProject> reportProject = new List<PrReportProject>();
+            foreach (var projectEmployee in projectEmployeeDict)
             {
 
-                var newReportEmploy = new ErReportEmployee
+                var newReportProject = new PrReportProject 
                 {
-                    EmployeeName = employeeProject.Key,
-                    ReportProject = new List<ErReportProject>()
+                    ProjectCode = projectEmployee.Key,
+                    ReportEmployee = new List<PrReportEmployee>()
                 };
-                foreach (var project in employeeProject.Value)
+
+
+                foreach (var employee in projectEmployee.Value)
                 {
-                    newReportEmploy.ReportProject.Add(new ErReportProject()
+                    newReportProject.ReportEmployee.Add(new PrReportEmployee()
                     {
-                        ProjectCode = project
+                        EmployeeName = employee
                     });
                 }
-                newReportEmploy.SetBeginAndEndDate(DateBegin, DateEnd);
+                newReportProject.SetBeginAndEndDate(DateBegin, DateEnd);
 
 
-                reportEmployee.Add(newReportEmploy);
+                reportProject.Add(newReportProject);
             }
 
             //Записываем данные о часах
-            foreach (var employee in reportEmployee)
+            foreach (var project in reportProject)
             {
-                foreach (var project in employee.ReportProject)
+                foreach (var employee in project.ReportEmployee)
                 {
                     var workingHours =
                         neededData.Where(
@@ -109,32 +110,28 @@ namespace Tabel.Dal.DataServices
                     project.WorkObject = workingHours.First().WorkObject;
                     foreach (var workingHour in workingHours)
                     {
-                        project.Hours[workingHour.WorkDate] = workingHour.WorkHour;
+                        employee.Hours[workingHour.WorkDate] = workingHour.WorkHour;
                     }
-
                 }
             }
 
 
-            //Записываем данные о зарплате
-            foreach (var employee in reportEmployee)
+            //Записываем данные о зарплате  НЕДОДЕЛКА
+            foreach (var project in reportProject)
             {
-                //var employees = reportEmployee.Where(data => data.EmployeeName == employee.EmployeeName);
-
-                
-
-                employee.Rate = neededData.Where(data => data.EmployeeName == employee.EmployeeName)
+                foreach (var employee in project.ReportEmployee)
+                {
+                    employee.Rate = neededData.Where(data => data.EmployeeName == employee.EmployeeName)
                         .Select(data => data.Rate)
                         .FirstOrDefault();
+                }
             }
 
 
 
             //Переделываем в формат грида
 
-            //result.MyColumns = reportEmployee[0].ReportProject[0].Hours.Keys.Select(date => date.ToShortDateString()).ToList();
-
-            result.Rows = new List<ErEmployeeViewModel>();
+            result.Rows = new List<PrProjectViewModel>();
 
             var totalHoursDict = new Dictionary<DateTime, int>();
             var totalMoney = 0.0;
@@ -144,7 +141,10 @@ namespace Tabel.Dal.DataServices
                 totalHoursDict[DateBegin.AddDays(i)] = 0;
             }
 
-            foreach (var reportEmploy in reportEmployee)
+
+           
+
+            foreach (var reportPrj in reportProject)
             {
                 var hoursDict = new Dictionary<DateTime, int>();
 
@@ -153,48 +153,50 @@ namespace Tabel.Dal.DataServices
                     hoursDict[DateBegin.AddDays(i)] = 0;
                 }
 
+                double projectMoney = 0;
 
-                foreach (var reportProject in reportEmploy.ReportProject)
+                foreach (var reportEmploy in reportPrj.ReportEmployee)
                 {
 
-                    var newEmployee = new ErEmployeeViewModel
+                    var newEmployee = new PrProjectViewModel
                     {
                         Name = reportEmploy.EmployeeName,
                         Rate = reportEmploy.Rate,
-                        Project = reportProject.ProjectCode,
-                        WorkObject = reportProject.WorkObject,
-                        Hours = reportProject.Hours.Values.ToList()
+                        Project = reportPrj.ProjectCode,
+                        WorkObject = reportPrj.WorkObject,
+                        Hours = reportEmploy.Hours.Values.ToList()
                     };
 
                     result.Rows.Add(newEmployee);
                     totalMoney += newEmployee.Money;
 
-                    foreach (var hour in reportProject.Hours)
+                    foreach (var hour in reportEmploy.Hours)
                     {
                         hoursDict[hour.Key] += hour.Value;
                         totalHoursDict[hour.Key] += hour.Value;
                     }
 
 
+                    projectMoney += newEmployee.Money;
+
                 }
 
-                result.Rows.Add(new ErEmployeeViewModel
+                result.Rows.Add(new PrProjectViewModel(projectMoney)
                 {
                     Hours = hoursDict.Values.ToList(),
-                    Name = reportEmploy.EmployeeName + " Итого",
-                    //Project = "По всем проектам",
-                    //WorkObject = "По всем объектам",
-                    Rate = reportEmploy.Rate
+                    
+                    Project = reportPrj.ProjectCode + " Итого",
+                  //  Rate = reportPrj.Rate   НЕДОДЕЛКА
                 });
             }
 
-            
 
-            result.Rows.Add(new ErEmployeeViewModel(totalMoney)
+
+            result.Rows.Add(new PrProjectViewModel(totalMoney)
             {
                 Hours = totalHoursDict.Values.ToList(),
-                Name = "Итого",
-               // Project = "По всем проектам"
+                Project = "Итого",
+                // Project = "По всем проектам"
             });
 
             return result;
@@ -210,13 +212,15 @@ namespace Tabel.Dal.DataServices
         public DateTime DateEnd { get; set; }
     }
 
-    class ErReportEmployee
+    class PrReportProject
     {
-        public string EmployeeName { get; set; }
+        public string ProjectCode { get; set; }
 
-        public double Rate { get; set; }
+        public string WorkObject { get; set; }
 
-        public List<ErReportProject> ReportProject { get; set; }
+
+
+        public List<PrReportEmployee> ReportEmployee { get; set; }
 
 
         /// <summary>
@@ -230,7 +234,7 @@ namespace Tabel.Dal.DataServices
             var countDays = span.Days;
 
 
-            foreach (var reportProject in ReportProject)
+            foreach (var reportProject in ReportEmployee)
             {
                 reportProject.Hours = new Dictionary<DateTime, int>();
                 for (int i = 0; i < countDays; i++)
@@ -242,11 +246,13 @@ namespace Tabel.Dal.DataServices
         }
     }
 
-    class ErReportProject
+    class PrReportEmployee
     {
-        public string ProjectCode { get; set; }
+        public string EmployeeName { get; set; }
 
-        public string WorkObject { get; set; }
+        public double Rate { get; set; }
+
+        // public string WorkObject { get; set; }
 
         public Dictionary<DateTime, int> Hours { get; set; }
     }

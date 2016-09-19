@@ -4,18 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Kendo.Mvc.UI;
 using Tabel.Bll;
 using Tabel.Dal;
 using Tabel.Dal.DataServices;
 using Tabel.ViewModels;
+using Tabel.ViewModels.ProjectReport;
 
 namespace Tabel.Controllers
 {
-    public class EmployeeReportController : Controller
+    public class ProjectReportController : Controller
     {
-
-        EmployeeReportService _erService = new EmployeeReportService(new TabelContext());
+       ProjectReportService _erService = new ProjectReportService(new TabelContext());
 
         public ActionResult View(string dateBegin, string dateEnd, string command)
         {
@@ -28,20 +27,20 @@ namespace Tabel.Controllers
                 _erService.DateBegin = Convert.ToDateTime(dateBegin);
                 _erService.DateEnd = Convert.ToDateTime(dateEnd);
             }
-            
-            EmployeeReportViewModel model;
+
+            ProjectReportViewModel model;
 
             if (command == "Загрузить Excel")
             {
-                var excelCreator = new ExcelCreator();
+                var excelCreator = new ProjectReportExcelCreator();
                 model = _erService.GetData();
                 var fullPath = excelCreator.CreateFile(model);
-                return File(new FileStream(fullPath, FileMode.Open), "application/vnd.ms-excel", "Отчёт по сотрудникам.xlsx");
+                return File(new FileStream(fullPath, FileMode.Open), "application/vnd.ms-excel", "Отчёт по проектам.xlsx");
             }
-            
+
             model = _erService.GetData();
             return View(model);
-  
+
 
         }
 
@@ -51,6 +50,6 @@ namespace Tabel.Controllers
         {
             return View();
         }
-        
+
     }
 }

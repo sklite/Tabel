@@ -27,7 +27,7 @@ textarea {
   display: inline-block;
   white-space: nowrap;
   transform: translate(0,100%) rotate(-90deg);
-  transform-origin: 0 0;
+  transform-origin: -10% 0%;
   position: absolute;
   /*bottom: 5px;*/
 }

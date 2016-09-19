@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using System.Security.AccessControl;
+using System.Security.Policy;
 using Tabel.Models;
 
 namespace Tabel.Dal
@@ -12,6 +13,10 @@ namespace Tabel.Dal
         public DbSet<Timesheet> Timesheets { get; set; }
 
 
+        //public TabelContext() : base("Tabel")
+        //{
+
+        //}
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>().ToTable("Employees");
