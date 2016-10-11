@@ -11,9 +11,10 @@
     .Name("Grid")
     .Columns(columns =>
     {
-
+        columns.Bound(p => p.Name).Title("Имя проекта");
         columns.Bound(p => p.Code).Title("Код проекта");
         columns.Bound(p => p.WorkObject).Title("Объект");
+        
         //columns.Bound(p => p.).Title("Почта");
         //columns.Bound(p => p.Rate).Title("Ставка");
 

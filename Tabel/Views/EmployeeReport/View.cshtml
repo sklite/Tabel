@@ -57,8 +57,8 @@
 @(Html.Kendo().Grid(Model.Rows)
     .Name("testGrid")
     .Scrollable(gg => gg.Enabled(true))
-    .HtmlAttributes(new { style = "height:" + Model.Rows.Count * 50 + "px;width:100%" })
-    
+    .HtmlAttributes(new { style = "height:" + (50 + Model.Rows.Count * 50) + "px;width:100%" })
+
 
     .Columns(columns =>
     {
@@ -80,3 +80,23 @@
         columns.Bound(r => r.Money).Format("{0:C}").Title("<b>Деньги</b>").Width(100); ;//.ClientFooterTemplate("Total Count: #=count#");
 
     }))
+
+
+<script>
+    $(document).ready(function () {
+        var table = document.getElementsByTagName('table')[2];
+
+        var rowLength = table.rows.length;
+
+        for (var i = 0; i < rowLength; i++) {
+            var row = table.rows[i];
+            for (var y = 0; y < 1; y++) {
+                var cell = row.cells[y];
+                if (cell.innerHTML.includes("Итого")) {
+                    row.style = "font-weight: bold";
+                }
+            }
+            
+        }
+    });
+</script>

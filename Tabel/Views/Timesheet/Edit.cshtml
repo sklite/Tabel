@@ -11,8 +11,8 @@
     .Name("Grid")
     .Columns(columns =>
     {
-        columns.ForeignKey(p => p.EmployeeId, (System.Collections.IEnumerable)ViewData["employees"], "EmployeeId", "EmployeeName").Title("Имя сотрудника");
-        columns.ForeignKey(p => p.ProjectId, (System.Collections.IEnumerable)ViewData["projects"], "ProjectId", "ProjectName").Width(140).Title("Код проекта");
+        columns.ForeignKey(p => p.EmployeeId, (System.Collections.IEnumerable)ViewData["employees"], "EmployeeId", "EmployeeName").Title("Имя сотрудника").Width(150);
+        columns.ForeignKey(p => p.ProjectId, (System.Collections.IEnumerable)ViewData["projects"], "ProjectId", "ProjectCode").Width(200).Title("Код проекта");
         columns.Bound(p => p.Date).Format("{0:dd.MM.yyyy}").Width(140).Title("Дата");
         columns.Bound(p => p.Hours).Width(100).Title("Часы");
         columns.Command(command => command.Destroy()).Width(110);
@@ -37,9 +37,9 @@
         .Model(model =>
         {
             model.Id(p => p.TimesheetId);
-            model.Field(p => p.EmployeeId).DefaultValue(1);
-            model.Field(p => p.ProjectId).DefaultValue(1);
-            model.Field(p => p.Hours).DefaultValue(2);
+            model.Field(p => p.EmployeeId).DefaultValue(0);
+            model.Field(p => p.ProjectId).DefaultValue(0);
+            model.Field(p => p.Hours).DefaultValue(0);
             //model.Field(p => p.)
         })
         .Create("Editing_Create", "Timesheet")

@@ -109,7 +109,8 @@ namespace Tabel.Dal.DataServices
                     project.WorkObject = workingHours.First().WorkObject;
                     foreach (var workingHour in workingHours)
                     {
-                        project.Hours[workingHour.WorkDate] = workingHour.WorkHour;
+                        var roundedDate = new DateTime(workingHour.WorkDate.Year,workingHour.WorkDate.Month, workingHour.WorkDate.Day);
+                        project.Hours[roundedDate] = workingHour.WorkHour;
                     }
 
                 }
@@ -171,7 +172,12 @@ namespace Tabel.Dal.DataServices
 
                     foreach (var hour in reportProject.Hours)
                     {
+                        if (!hoursDict.ContainsKey(hour.Key))
+                            hoursDict[hour.Key] = 0;
                         hoursDict[hour.Key] += hour.Value;
+
+                        if (!totalHoursDict.ContainsKey(hour.Key))
+                            totalHoursDict[hour.Key] = 0;
                         totalHoursDict[hour.Key] += hour.Value;
                     }
 
@@ -190,12 +196,12 @@ namespace Tabel.Dal.DataServices
 
             
 
-            result.Rows.Add(new ErEmployeeViewModel(totalMoney)
-            {
-                Hours = totalHoursDict.Values.ToList(),
-                Name = "Итого",
-               // Project = "По всем проектам"
-            });
+            //result.Rows.Add(new ErEmployeeViewModel(totalMoney)
+            //{
+            //    Hours = totalHoursDict.Values.ToList(),
+            //    Name = "Итого",
+            //   // Project = "По всем проектам"
+            //});
 
             return result;
         }

@@ -33,7 +33,9 @@ namespace Tabel.ViewModels.ProjectReport
 
         public string Name { get; set; }
 
-        public string Project { get; set; }
+        public string ProjectName { get; set; }
+
+        public string ProjectCode { get; set; }
 
         public string WorkObject { get; set; }
 

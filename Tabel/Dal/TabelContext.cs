@@ -12,11 +12,12 @@ namespace Tabel.Dal
         public DbSet<Role> Roles { get; set; }
         public DbSet<Timesheet> Timesheets { get; set; }
 
+//#if Release
+        public TabelContext() : base("Tabel")
+        {
 
-        //public TabelContext() : base("Tabel")
-        //{
-
-        //}
+        }
+//#endif
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>().ToTable("Employees");
@@ -27,7 +28,7 @@ namespace Tabel.Dal
 
         /*
          * 
-         *             context.Employees.AddOrUpdate(new Employee
+         *             context.Employees.AddOrUpdate(new Employee 
             {
                 Email = "sklite@ya.ru",
                 Name = "Алексей",

@@ -25,14 +25,12 @@ namespace Tabel.Controllers
                 return RedirectToAction("Index", "Home");
 
                 ViewData["employees"] = _timesheetService.GetEmployeeNames();
-            ViewData["projects"] = _timesheetService.GetProjectNames();
+            ViewData["projects"] = _timesheetService.GetProjectCodes();
             return View();
         }
 
         public ActionResult Editing_Read([DataSourceRequest] DataSourceRequest request)
         {
-            
-
 
             _timesheetService.UserId = Convert.ToInt32(Session["UserId"]);
             _timesheetService.IsAdmin = Convert.ToBoolean(Session["IsAdmin"]);

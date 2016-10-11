@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
+using Kendo.Mvc.Extensions;
+using Kendo.Mvc.UI;
 using Tabel.Models;
 using Tabel.ViewModels;
 using Tabel.ViewModels.Timesheet;
@@ -27,11 +29,11 @@ namespace Tabel.Dal
                     EmployeeId = ts.Employee.Id,
                     EmployeeName = ts.Employee.Name
                 },
-                ProjectId = ts.Project.Id,
+                ProjectId = ts.Project.Id,//ts.Project.Code + "##" + ts.Project.Id,
                 Project = new TsProjectViewModel
                 {
-                    ProjectId = ts.Project.Id,
-                    ProjectName = ts.Project.Name
+                    ProjectId = ts.Project.Id,//ts.Project.Code + "##" + ts.Project.Id.ToString(),
+                    ProjectCode = ts.Project.Code
                 },
                 Date = ts.Date,
                 Hours = ts.Hours
@@ -49,14 +51,14 @@ namespace Tabel.Dal
             });
         }
 
-        public IEnumerable<TsProjectViewModel> GetProjectNames()
+        public IEnumerable<TsProjectViewModel> GetProjectCodes()
         {
             return _tabelContext.Projects.Select(proj => new TsProjectViewModel()
             {
-                ProjectId = proj.Id,
-                ProjectName = proj.Name,
+                ProjectId = proj.Id,//proj.Code + "##" + proj.Id.ToString(),
+                ProjectCode = proj.Code,
 
-            });
+            }).OrderBy(projVm => projVm.ProjectCode);
         }
 
         public override IEnumerable<TimesheetViewModel> Read()
@@ -75,7 +77,7 @@ namespace Tabel.Dal
         public override void Create(TimesheetViewModel timesheetVm)
         {
             var employee = _tabelContext.Employees.FirstOrDefault(em => em.Id == timesheetVm.EmployeeId);
-            var project = _tabelContext.Projects.FirstOrDefault(pr => pr.Id == timesheetVm.ProjectId);
+            var project = _tabelContext.Projects.FirstOrDefault(pr => pr.Id == timesheetVm.ProjectId);//GetIdFromProjectCodeAndId(timesheetVm.ProjectId));
 
             var timesheet = new Timesheet
             {
@@ -88,11 +90,22 @@ namespace Tabel.Dal
             _tabelContext.SaveChanges();
         }
 
+        //int GetIdFromProjectCodeAndId(string codeAndId)
+        //{
+        //    var id = codeAndId.Split(new [] {"##"}, StringSplitOptions.RemoveEmptyEntries)[1];
+        //    return Convert.ToInt32(id);
+        //}
+
+        //string JoinCodeAndId(string code, int id)
+        //{
+        //    return code + "##" + id;
+        //}
+
         public override void Update(TimesheetViewModel editedTs)
         {
              var edited = _tabelContext.Timesheets.FirstOrDefault(tm => tm.Id == editedTs.TimesheetId);
             edited.Employee = _tabelContext.Employees.FirstOrDefault(em => em.Id == editedTs.EmployeeId);
-            edited.Project = _tabelContext.Projects.FirstOrDefault(pr => pr.Id == editedTs.ProjectId);
+            edited.Project = _tabelContext.Projects.FirstOrDefault(pr => pr.Id == editedTs.ProjectId);//GetIdFromProjectCodeAndId(editedTs.ProjectId));
             edited.Date = editedTs.Date;
             edited.Hours = edited.Hours;
             _tabelContext.SaveChanges();
@@ -108,7 +121,16 @@ namespace Tabel.Dal
             
         }
 
+
         public int UserId { get; set; }
         public bool IsAdmin { get; set; }
     }
+
+    //public static class DataSourceRequestExtensions
+    //{
+    //    public static void ReplaceSortColumn(this DataSourceRequest instance, string from, string to)
+    //    {
+    //        instance.Sorts.Where(w => w.Member == from).ToList().ForEach(s => s.Member = to);
+    //    }
+    //}
 }

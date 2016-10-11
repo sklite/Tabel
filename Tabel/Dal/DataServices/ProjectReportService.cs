@@ -42,7 +42,8 @@ namespace Tabel.Dal.DataServices
             var neededData = timesheetsInterval.Select(ts => new
             {
                 EmployeeName = ts.Employee.Name,
-                Project = ts.Project.Name,
+                ProjectName = ts.Project.Name,
+                ProjectCode = ts.Project.Code,
                 Rate = ts.Employee.Rate,
                 ts.Project.WorkObject,
                 ts.Hours,
@@ -57,14 +58,14 @@ namespace Tabel.Dal.DataServices
                 reportDays.Add(DateBegin.AddDays(i));
             }
 
-            var allProjects = neededData.Select(data => data.Project).Distinct();
+            var allProjects = neededData.Select(data => data.ProjectName).Distinct();
 
             var projectEmployeeDict = new Dictionary<string, List<string>>();
 
             //у этого проекта такие то сотрудники
             foreach (var project in allProjects)
             {
-                projectEmployeeDict[project] = neededData.Where(data => data.Project == project).Select(data => data.EmployeeName).Distinct().ToList();
+                projectEmployeeDict[project] = neededData.Where(data => data.ProjectName == project).Select(data => data.EmployeeName).Distinct().ToList();
             }
 
             //Заполняем тут данные о сотрудниках и проектах
@@ -73,8 +74,8 @@ namespace Tabel.Dal.DataServices
             {
 
                 var newReportProject = new PrReportProject 
-                {
-                    ProjectCode = projectEmployee.Key,
+                { 
+                    ProjectName = projectEmployee.Key,
                     ReportEmployee = new List<PrReportEmployee>()
                 };
 
@@ -99,18 +100,21 @@ namespace Tabel.Dal.DataServices
                 {
                     var workingHours =
                         neededData.Where(
-                            data => data.EmployeeName == employee.EmployeeName && data.Project == project.ProjectCode)
+                            data => data.EmployeeName == employee.EmployeeName && data.ProjectName == project.ProjectName)
                             .Select(data =>
                                 new
                                 {
                                     WorkDate = data.Date,
                                     WorkHour = data.Hours,
                                     data.WorkObject,
+                                    data.ProjectCode
                                 }).ToList();
                     project.WorkObject = workingHours.First().WorkObject;
+                    project.ProjectCode = workingHours.First().ProjectCode;
                     foreach (var workingHour in workingHours)
                     {
-                        employee.Hours[workingHour.WorkDate] = workingHour.WorkHour;
+                        var roundedDate = new DateTime(workingHour.WorkDate.Year, workingHour.WorkDate.Month, workingHour.WorkDate.Day);
+                        employee.Hours[roundedDate] = workingHour.WorkHour;
                     }
                 }
             }
@@ -162,8 +166,9 @@ namespace Tabel.Dal.DataServices
                     {
                         Name = reportEmploy.EmployeeName,
                         Rate = reportEmploy.Rate,
-                        Project = reportPrj.ProjectCode,
+                        ProjectName = reportPrj.ProjectName,
                         WorkObject = reportPrj.WorkObject,
+                        ProjectCode = reportPrj.ProjectCode,
                         Hours = reportEmploy.Hours.Values.ToList()
                     };
 
@@ -172,7 +177,12 @@ namespace Tabel.Dal.DataServices
 
                     foreach (var hour in reportEmploy.Hours)
                     {
+                        if (!hoursDict.ContainsKey(hour.Key))
+                            hoursDict[hour.Key] = 0;
                         hoursDict[hour.Key] += hour.Value;
+
+                        if (!totalHoursDict.ContainsKey(hour.Key))
+                            totalHoursDict[hour.Key] = 0;
                         totalHoursDict[hour.Key] += hour.Value;
                     }
 
@@ -185,19 +195,19 @@ namespace Tabel.Dal.DataServices
                 {
                     Hours = hoursDict.Values.ToList(),
                     
-                    Project = reportPrj.ProjectCode + " Итого",
+                    ProjectName = reportPrj.ProjectName + " Итого",
                   //  Rate = reportPrj.Rate   НЕДОДЕЛКА
                 });
             }
 
 
 
-            result.Rows.Add(new PrProjectViewModel(totalMoney)
-            {
-                Hours = totalHoursDict.Values.ToList(),
-                Project = "Итого",
-                // Project = "По всем проектам"
-            });
+            //result.Rows.Add(new PrProjectViewModel(totalMoney)
+            //{
+            //    Hours = totalHoursDict.Values.ToList(),
+            //    ProjectName = "Итого",
+            //    // Project = "По всем проектам"
+            //});
 
             return result;
         }
@@ -217,6 +227,8 @@ namespace Tabel.Dal.DataServices
         public string ProjectCode { get; set; }
 
         public string WorkObject { get; set; }
+
+        public string ProjectName { get; set; }
 
 
 
