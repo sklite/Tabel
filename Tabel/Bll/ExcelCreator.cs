@@ -66,26 +66,34 @@ namespace Tabel.Bll
 
 
 
+            //document.SetCellValue(1, 1, "Имя");
+            //document.SetCellValue(1, 2, "Проект");
+            //document.SetCellValue(1, 3, "Объект");
+
+
             document.SetCellValue(1, 1, "Имя");
-            document.SetCellValue(1, 2, "Проект");
-            document.SetCellValue(1, 3, "Объект");
+            document.SetCellValue(1, 2, "Объект");
+            document.SetCellValue(1, 3, "Код проекта");
+            document.SetCellValue(1, 4, "Название проекта");
+
 
             document.SetColumnWidth(1, 17);
             document.SetColumnWidth(2, 20);
             document.SetColumnWidth(3, 17);
+            document.SetColumnWidth(4, 20);
 
             for (int i = 0; i < reportVm.MyColumns.Count; i++)
             {
-                document.SetCellValue(1, i + 4, reportVm.MyColumns[i]);
+                document.SetCellValue(1, i + 5, reportVm.MyColumns[i]);
 
-                document.SetColumnWidth(i + 4, 4);
+                document.SetColumnWidth(i + 5, 4);
                 // style.SetCellStyle();
-                document.SetCellStyle(1, i + 4, style);
+                document.SetCellStyle(1, i + 5, style);
             }
 
-            document.SetCellValue(1, reportVm.MyColumns.Count + 4, "Всего часов");
-            document.SetColumnWidth(reportVm.MyColumns.Count + 4, 17);
-            document.SetCellValue(1, reportVm.MyColumns.Count + 5, "Деньги");
+            document.SetCellValue(1, reportVm.MyColumns.Count + 5, "Всего часов");
+            document.SetColumnWidth(reportVm.MyColumns.Count + 5, 17);
+            document.SetCellValue(1, reportVm.MyColumns.Count + 6, "Деньги");
         }
 
         void SetData(SLDocument document, EmployeeReportViewModel reportVm)
@@ -96,19 +104,24 @@ namespace Tabel.Bll
 
                 int rownum = i + 2;
 
+                //document.SetCellValue(rownum, 1, currentRow.Name);
+                //document.SetCellValue(rownum, 2, currentRow.Project);
+                //document.SetCellValue(rownum, 3, currentRow.WorkObject);
+
                 document.SetCellValue(rownum, 1, currentRow.Name);
-                document.SetCellValue(rownum, 2, currentRow.Project);
-                document.SetCellValue(rownum, 3, currentRow.WorkObject);
+                document.SetCellValue(rownum, 2, currentRow.WorkObject);
+                document.SetCellValue(rownum, 3, currentRow.ProjectCode);
+                document.SetCellValue(rownum, 4, currentRow.Name);
 
 
                 for (int j = 0; j < currentRow.Hours.Count; j++)
                 {
-                    document.SetCellValue(rownum, j + 4, currentRow.Hours[j]);
+                    document.SetCellValue(rownum, j + 5, currentRow.Hours[j]);
                 }
 
 
-                document.SetCellValue(rownum, reportVm.MyColumns.Count + 4, currentRow.TotalHours);
-                document.SetCellValue(rownum, reportVm.MyColumns.Count + 5, currentRow.Money);
+                document.SetCellValue(rownum, reportVm.MyColumns.Count + 5, currentRow.TotalHours);
+                document.SetCellValue(rownum, reportVm.MyColumns.Count + 6, currentRow.Money);
 
             }
         }

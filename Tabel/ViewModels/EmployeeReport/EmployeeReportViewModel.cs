@@ -29,6 +29,11 @@ namespace Tabel.ViewModels
 
         public string Name { get; set; }
 
+
+        public string ProjectCode { get; set; }
+        /// <summary>
+        /// Имя проекта
+        /// </summary>
         public string Project { get; set; }
 
         public string WorkObject { get; set; }

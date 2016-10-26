@@ -42,7 +42,8 @@ namespace Tabel.Dal.DataServices
             var neededData = timesheetsInterval.Select(ts => new
             {
                 EmployeeName = ts.Employee.Name,
-                Project = ts.Project.Name,
+                ProjectName = ts.Project.Name,
+                ProjectCode = ts.Project.Code,
                 Rate = ts.Employee.Rate,
                 ts.Project.WorkObject,
                 ts.Hours,
@@ -65,7 +66,7 @@ namespace Tabel.Dal.DataServices
             foreach (var employee in allEmployees)
             {
                 employeeProjectDict[employee] =
-                    neededData.Where(data => data.EmployeeName == employee).Select(data => data.Project).Distinct().ToList();
+                    neededData.Where(data => data.EmployeeName == employee).Select(data => data.ProjectName).Distinct().ToList();
             }
 
             //Заполняем тут данные о сотрудниках и проектах
@@ -82,7 +83,8 @@ namespace Tabel.Dal.DataServices
                 {
                     newReportEmploy.ReportProject.Add(new ErReportProject()
                     {
-                        ProjectCode = project
+                        ProjectName = project,
+                        ProjectCode = neededData.Where(data => data.ProjectName == project).Select(data=>data.ProjectCode).FirstOrDefault()
                     });
                 }
                 newReportEmploy.SetBeginAndEndDate(DateBegin, DateEnd);
@@ -98,7 +100,7 @@ namespace Tabel.Dal.DataServices
                 {
                     var workingHours =
                         neededData.Where(
-                            data => data.EmployeeName == employee.EmployeeName && data.Project == project.ProjectCode)
+                            data => data.EmployeeName == employee.EmployeeName && data.ProjectName == project.ProjectName)
                             .Select(data =>
                                 new
                                 {
@@ -121,9 +123,6 @@ namespace Tabel.Dal.DataServices
             foreach (var employee in reportEmployee)
             {
                 //var employees = reportEmployee.Where(data => data.EmployeeName == employee.EmployeeName);
-
-                
-
                 employee.Rate = neededData.Where(data => data.EmployeeName == employee.EmployeeName)
                         .Select(data => data.Rate)
                         .FirstOrDefault();
@@ -132,9 +131,6 @@ namespace Tabel.Dal.DataServices
 
 
             //Переделываем в формат грида
-
-            //result.MyColumns = reportEmployee[0].ReportProject[0].Hours.Keys.Select(date => date.ToShortDateString()).ToList();
-
             result.Rows = new List<ErEmployeeViewModel>();
 
             var totalHoursDict = new Dictionary<DateTime, int>();
@@ -162,7 +158,8 @@ namespace Tabel.Dal.DataServices
                     {
                         Name = reportEmploy.EmployeeName,
                         Rate = reportEmploy.Rate,
-                        Project = reportProject.ProjectCode,
+                        Project = reportProject.ProjectName,
+                        ProjectCode = reportProject.ProjectCode,
                         WorkObject = reportProject.WorkObject,
                         Hours = reportProject.Hours.Values.ToList()
                     };
@@ -251,6 +248,8 @@ namespace Tabel.Dal.DataServices
     class ErReportProject
     {
         public string ProjectCode { get; set; }
+
+        public string ProjectName { get; set; }
 
         public string WorkObject { get; set; }
 

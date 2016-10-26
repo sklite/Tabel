@@ -59,10 +59,16 @@ namespace Tabel.Bll
             style.Alignment.TextRotation = 90;
 
 
-            document.SetCellValue(1, 1, "Проект");
-            document.SetCellValue(1, 2, "Объект");
-            document.SetCellValue(1, 3, "Код проекта");
-            document.SetCellValue(1, 4, "Имя");
+            //document.SetCellValue(1, 1, "Проект");
+            //document.SetCellValue(1, 2, "Объект");
+            //document.SetCellValue(1, 3, "Код проекта");
+            //document.SetCellValue(1, 4, "Имя");
+
+
+            document.SetCellValue(1, 1, "Объект");
+            document.SetCellValue(1, 2, "Код проекта");
+            document.SetCellValue(1, 3, "Название проекта");
+            document.SetCellValue(1, 4, "Инженер");
 
 
             document.SetColumnWidth(1, 17);
@@ -92,9 +98,9 @@ namespace Tabel.Bll
 
                 int rownum = i + 2;
 
-                document.SetCellValue(rownum, 1, currentRow.ProjectName);
-                document.SetCellValue(rownum, 2, currentRow.WorkObject);
-                document.SetCellValue(rownum, 3, currentRow.ProjectCode);
+                document.SetCellValue(rownum, 1, currentRow.WorkObject);
+                document.SetCellValue(rownum, 2, currentRow.ProjectCode);
+                document.SetCellValue(rownum, 3, currentRow.ProjectName);
                 document.SetCellValue(rownum, 4, currentRow.Name);
 
 

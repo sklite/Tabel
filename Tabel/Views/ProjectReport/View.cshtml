@@ -60,10 +60,11 @@
 
     .Columns(columns =>
     {
-        columns.Bound(r => r.ProjectName).Title("<b>Проект</b>").Width(150);
+        
         columns.Bound(r => r.WorkObject).Title("<b>Объект</b>").Width(120);
         columns.Bound(r => r.ProjectCode).Title("<b>Код проекта</b>").Width(120);
-        columns.Bound(r => r.Name).Title("<b>Имя</b>").Filterable(ftb => ftb.Cell(cell => cell.ShowOperators(false))).Width(100);
+        columns.Bound(r => r.ProjectName).Title("<b>Название проекта</b>").Width(150);
+        columns.Bound(r => r.Name).Title("<b>Инженер</b>").Filterable(ftb => ftb.Cell(cell => cell.ShowOperators(false))).Width(100);
 
 
         for (int i = 0; i < Model.MyColumns.Count; i++)
