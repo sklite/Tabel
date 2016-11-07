@@ -9,6 +9,7 @@
 
 @(Html.Kendo().Grid<ProjectViewModel>()
     .Name("Grid")
+    .HtmlAttributes(new { style = "height:800px;width:100%" })
     .Columns(columns =>
     {
         columns.Bound(p => p.Name).Title("Имя проекта");

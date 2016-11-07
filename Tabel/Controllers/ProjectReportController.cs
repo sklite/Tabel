@@ -25,7 +25,7 @@ namespace Tabel.Controllers
             {
 
                 _erService.DateBegin = Convert.ToDateTime(dateBegin);
-                _erService.DateEnd = Convert.ToDateTime(dateEnd);
+                _erService.DateEnd = Convert.ToDateTime(dateEnd).AddDays(1);
             }
 
             ProjectReportViewModel model;

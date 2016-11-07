@@ -111,7 +111,7 @@ namespace Tabel.Bll
                 document.SetCellValue(rownum, 1, currentRow.Name);
                 document.SetCellValue(rownum, 2, currentRow.WorkObject);
                 document.SetCellValue(rownum, 3, currentRow.ProjectCode);
-                document.SetCellValue(rownum, 4, currentRow.Name);
+                document.SetCellValue(rownum, 4, currentRow.Project);
 
 
                 for (int j = 0; j < currentRow.Hours.Count; j++)
