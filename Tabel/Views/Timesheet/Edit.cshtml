@@ -25,6 +25,7 @@
     .Editable(editable => editable.Mode(GridEditMode.InCell))
     .Pageable()
     .Navigatable()
+    .Filterable()
     .Sortable()
     .Scrollable()
     .HtmlAttributes(new { style = "height: 800px" })
@@ -34,6 +35,7 @@
         .PageSize(40)
         .ServerOperation(false)
         .Events(events => events.Error("error_handler"))
+        .Sort(sort => sort.Add("EmployeeId").Ascending())
         .Model(model =>
         {
             model.Id(p => p.TimesheetId);

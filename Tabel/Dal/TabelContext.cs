@@ -13,7 +13,7 @@ namespace Tabel.Dal
         public DbSet<Timesheet> Timesheets { get; set; }
 
 //#if Release
-        public TabelContext() //: base("Tabel")
+        public TabelContext() : base("Tabel")
         {
 
         }

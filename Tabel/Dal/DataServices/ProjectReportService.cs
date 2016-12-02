@@ -36,7 +36,7 @@ namespace Tabel.Dal.DataServices
             var timesheetsInterval =
                 _tabelContext.Timesheets.Include("Employee")
                     .Include("Project")
-                    .Where(ts => ts.Date > DateBegin && ts.Date < DateEnd);
+                    .Where(ts => ts.Date >= DateBegin && ts.Date < DateEnd);
 
 
             var neededData = timesheetsInterval.Select(ts => new
@@ -58,14 +58,14 @@ namespace Tabel.Dal.DataServices
                 reportDays.Add(DateBegin.AddDays(i));
             }
 
-            var allProjects = neededData.Select(data => data.ProjectName).Distinct();
+            var allProjects = neededData.Select(data => data.ProjectCode).Distinct();
 
             var projectEmployeeDict = new Dictionary<string, List<string>>();
 
             //у этого проекта такие то сотрудники
             foreach (var project in allProjects)
             {
-                projectEmployeeDict[project] = neededData.Where(data => data.ProjectName == project).Select(data => data.EmployeeName).Distinct().ToList();
+                projectEmployeeDict[project] = neededData.Where(data => data.ProjectCode == project).Select(data => data.EmployeeName).Distinct().ToList();
             }
 
             //Заполняем тут данные о сотрудниках и проектах
@@ -75,7 +75,8 @@ namespace Tabel.Dal.DataServices
 
                 var newReportProject = new PrReportProject 
                 { 
-                    ProjectName = projectEmployee.Key,
+                  //  ProjectName = projectEmployee.Key,
+                   ProjectCode = projectEmployee.Key,
                     ReportEmployee = new List<PrReportEmployee>()
                 };
 
@@ -100,7 +101,7 @@ namespace Tabel.Dal.DataServices
                 {
                     var workingHours =
                         neededData.Where(
-                            data => data.EmployeeName == employee.EmployeeName && data.ProjectName == project.ProjectName)
+                            data => data.EmployeeName == employee.EmployeeName && data.ProjectCode == project.ProjectCode)
                             .Select(data =>
                                 new
                                 {
@@ -152,6 +153,11 @@ namespace Tabel.Dal.DataServices
             {
                 var hoursDict = new Dictionary<DateTime, int>();
 
+                var neededProject =
+                    neededData.FirstOrDefault(data => data.ProjectCode == reportPrj.ProjectCode);
+                if (neededProject != null)
+                    reportPrj.ProjectName = neededProject.ProjectName;
+
                 for (int i = 0; i < countDays; i++)
                 {
                     hoursDict[DateBegin.AddDays(i)] = 0;
@@ -191,10 +197,12 @@ namespace Tabel.Dal.DataServices
 
                 }
 
+                result.Rows = result.Rows.OrderBy(row => row.ProjectCode).ToList();
+
                 result.Rows.Add(new PrProjectViewModel(projectMoney)
                 {
                     Hours = hoursDict.Values.ToList(),
-                    
+                    ProjectCode = reportPrj.ProjectCode + " Итого",
                     ProjectName = reportPrj.ProjectName + " Итого",
                   //  Rate = reportPrj.Rate   НЕДОДЕЛКА
                 });

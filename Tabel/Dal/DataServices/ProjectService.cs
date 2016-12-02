@@ -27,6 +27,8 @@ namespace Tabel.Dal.DataServices
 
         public override void Create(ProjectViewModel dataToCreate)
         {
+            if (_tabelContext.Projects.Any(prj => prj.Code == dataToCreate.Code))
+                return;
             var project = new Project
             {
                 Code = dataToCreate.Code,

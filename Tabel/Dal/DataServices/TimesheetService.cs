@@ -37,7 +37,7 @@ namespace Tabel.Dal
                 },
                 Date = ts.Date,
                 Hours = ts.Hours
-            });
+            });//.OrderBy(ts=>ts.Employee.EmployeeName);
         }
 
 
@@ -70,14 +70,22 @@ namespace Tabel.Dal
             }
             var isAdmin = UserLoginManager.IsUserManager(UserId, _tabelContext);
             return ConvertToVm(isAdmin 
-                ? _tabelContext.Timesheets.Include("Employee").Include("Project") 
+                ? _tabelContext.Timesheets.Include("Employee").OrderBy(em => em.Employee.Name).Include("Project")
                 : _tabelContext.Timesheets.Include("Employee").Include("Project").Where(ts => ts.Employee.Id == UserId));
         }
 
         public override void Create(TimesheetViewModel timesheetVm)
         {
+
+            if (timesheetVm.EmployeeId == 0 || timesheetVm.ProjectId == 0)
+                return;
+
             var employee = _tabelContext.Employees.FirstOrDefault(em => em.Id == timesheetVm.EmployeeId);
             var project = _tabelContext.Projects.FirstOrDefault(pr => pr.Id == timesheetVm.ProjectId);//GetIdFromProjectCodeAndId(timesheetVm.ProjectId));
+
+
+
+            //if (_tabelContext.Timesheets.Any(ts => ts.))
 
             var timesheet = new Timesheet
             {

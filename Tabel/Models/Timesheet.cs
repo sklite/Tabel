@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.ModelConfiguration.Configuration;
 
 namespace Tabel.Models
 {

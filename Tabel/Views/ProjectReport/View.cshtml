@@ -55,6 +55,7 @@
 @(Html.Kendo().Grid(Model.Rows)
     .Name("testGrid")
     .Scrollable(gg => gg.Enabled(true))
+    .Filterable()
     .HtmlAttributes(new { style = "height:" + (50 + Model.Rows.Count * 50) + "px;width:100%" })
 
 

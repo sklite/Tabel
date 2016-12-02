@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.AccessControl;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Tabel.ViewModels;
 
 namespace Tabel.Dal.DataServices
@@ -36,7 +37,7 @@ namespace Tabel.Dal.DataServices
             var timesheetsInterval =
                 _tabelContext.Timesheets.Include("Employee")
                     .Include("Project")
-                    .Where(ts => ts.Date > DateBegin && ts.Date < DateEnd);
+                    .Where(ts => ts.Date >= DateBegin && ts.Date < DateEnd);
 
 
             var neededData = timesheetsInterval.Select(ts => new
@@ -191,7 +192,7 @@ namespace Tabel.Dal.DataServices
                 });
             }
 
-            
+            result.Rows = result.Rows.OrderBy(row => row.Name).ThenBy(then => then.ProjectCode).ToList();
 
             //result.Rows.Add(new ErEmployeeViewModel(totalMoney)
             //{

@@ -42,6 +42,10 @@ namespace Tabel.Dal
 
         public override void Create(EmployeeViewModel dataToCreate)
         {
+
+            if (_tabelContext.Employees.Any(emp => emp.Name == dataToCreate.Name))
+                return;
+
             var role = _tabelContext.Roles.FirstOrDefault(em => em.Id == dataToCreate.RoleId);
 
             var employee = new Employee
