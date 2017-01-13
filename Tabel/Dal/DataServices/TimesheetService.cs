@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using Kendo.Mvc.Extensions;
@@ -80,12 +81,29 @@ namespace Tabel.Dal
             if (timesheetVm.EmployeeId == 0 || timesheetVm.ProjectId == 0)
                 return;
 
+         //   var shortendDate = new DateTime(timesheetVm.Date.Year, timesheetVm.Date.Month, timesheetVm.Date.Day);
+
+
+            //var tempTs = _tabelContext.Timesheets
+            //    .Include("Employee")
+            //    .Include("Project").ToList();
+
+            //проверка на задвоения
+            if (_tabelContext.Timesheets
+                .Include("Employee")
+                .Include("Project")
+                .Any(ts => ts.Project.Id == timesheetVm.ProjectId && ts.Employee.Id == timesheetVm.EmployeeId
+                && ts.Date.Year == timesheetVm.Date.Year
+                && ts.Date.Month == timesheetVm.Date.Month
+                && ts.Date.Day == timesheetVm.Date.Day
+                && ts.Hours == timesheetVm.Hours))
+                return;
+
             var employee = _tabelContext.Employees.FirstOrDefault(em => em.Id == timesheetVm.EmployeeId);
             var project = _tabelContext.Projects.FirstOrDefault(pr => pr.Id == timesheetVm.ProjectId);//GetIdFromProjectCodeAndId(timesheetVm.ProjectId));
 
 
 
-            //if (_tabelContext.Timesheets.Any(ts => ts.))
 
             var timesheet = new Timesheet
             {
@@ -115,7 +133,7 @@ namespace Tabel.Dal
             edited.Employee = _tabelContext.Employees.FirstOrDefault(em => em.Id == editedTs.EmployeeId);
             edited.Project = _tabelContext.Projects.FirstOrDefault(pr => pr.Id == editedTs.ProjectId);//GetIdFromProjectCodeAndId(editedTs.ProjectId));
             edited.Date = editedTs.Date;
-            edited.Hours = edited.Hours;
+            edited.Hours = editedTs.Hours;
             _tabelContext.SaveChanges();
         }
 
