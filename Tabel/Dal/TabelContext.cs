@@ -13,10 +13,10 @@ namespace Tabel.Dal
         public DbSet<Timesheet> Timesheets { get; set; }
 
 //#if Release
-        public TabelContext() : base("Tabel")
-        {
+        //public TabelContext() : base("Tabel")
+        //{
 
-        }
+        //}
 //#endif
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -26,15 +26,6 @@ namespace Tabel.Dal
             modelBuilder.Entity<Timesheet>().ToTable("Timesheet");
         }
 
-        /*
-         * 
-         *             context.Employees.AddOrUpdate(new Employee 
-            {
-                Email = "sklite@ya.ru",
-                Name = "Алексей",
-                Pass = "123",
-                PositionId = 1
-            });
-         * */
+
     }
 }

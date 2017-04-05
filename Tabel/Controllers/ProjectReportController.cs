@@ -16,7 +16,7 @@ namespace Tabel.Controllers
     {
        ProjectReportService _erService = new ProjectReportService(new TabelContext());
 
-        public ActionResult View(string dateBegin, string dateEnd, string command)
+        public ActionResult View(string dateBegin, string dateEnd, string projectFilter, string command)
         {
             if (!ModelState.IsValid)
                 return RedirectToAction("View");
@@ -30,6 +30,7 @@ namespace Tabel.Controllers
 
             ProjectReportViewModel model;
 
+            _erService.ProjectFilter = projectFilter;
             if (command == "Загрузить Excel")
             {
                 var excelCreator = new ProjectReportExcelCreator();

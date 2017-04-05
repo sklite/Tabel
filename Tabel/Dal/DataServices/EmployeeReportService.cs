@@ -194,12 +194,17 @@ namespace Tabel.Dal.DataServices
 
             result.Rows = result.Rows.OrderBy(row => row.Name).ThenBy(then => then.ProjectCode).ToList();
 
+            result.Employees = allEmployees.ToList();
+            result.Employees.Insert(0, "Все");
             //result.Rows.Add(new ErEmployeeViewModel(totalMoney)
             //{
             //    Hours = totalHoursDict.Values.ToList(),
             //    Name = "Итого",
             //   // Project = "По всем проектам"
             //});
+
+            if (!string.IsNullOrEmpty(EmployeeFilter) && EmployeeFilter != "Все")
+                result.Rows.RemoveAll(item => item.Name != EmployeeFilter);
 
             return result;
         }
@@ -212,6 +217,8 @@ namespace Tabel.Dal.DataServices
         public DateTime DateBegin { get; set; }
 
         public DateTime DateEnd { get; set; }
+
+        public string EmployeeFilter { get; set; }
     }
 
     class ErReportEmployee

@@ -35,6 +35,19 @@
                           .Name("dateEnd")
                           .Value(DateTime.Now)
                           //.HtmlAttributes(new {style = "width:100%;"}
+                          )
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Проект:
+                </td>
+                <td>
+                    @(Html.Kendo().ComboBox()
+                          .Name("projectFilter")
+                          .BindTo(Model.Projects)
+                          .SelectedIndex(0)
+                          .Suggest(true)
                     )
                 </td>
             </tr>

@@ -17,7 +17,7 @@ namespace Tabel.Controllers
 
         EmployeeReportService _erService = new EmployeeReportService(new TabelContext());
 
-        public ActionResult View(string dateBegin, string dateEnd, string command)
+        public ActionResult View(string dateBegin, string dateEnd,string employeeFilter, string command)
         {
             if (!ModelState.IsValid)
                 return RedirectToAction("View");
@@ -28,6 +28,8 @@ namespace Tabel.Controllers
                 _erService.DateBegin = Convert.ToDateTime(dateBegin);
                 _erService.DateEnd = Convert.ToDateTime(dateEnd).AddDays(1);
             }
+
+            _erService.EmployeeFilter = employeeFilter;
             
             EmployeeReportViewModel model;
 

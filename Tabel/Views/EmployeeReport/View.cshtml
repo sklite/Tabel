@@ -42,6 +42,20 @@
             </tr>
             <tr>
                 <td>
+                    Сотрудник:
+                </td>
+                <td>
+                    @(Html.Kendo().ComboBox()
+                          .Name("employeeFilter")
+                          .BindTo(Model.Employees)
+                          .SelectedIndex(0)
+                          .Suggest(true)
+                          //.HtmlAttributes(new {style = "width:100%;"}
+                    )
+                </td>
+            </tr>
+            <tr>
+                <td>
                     <input type="submit" name="command" value="Отобразить отчёт"  class="k-primary k-button" />
                 </td>
                 <td>

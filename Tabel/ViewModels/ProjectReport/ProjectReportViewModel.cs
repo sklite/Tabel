@@ -9,6 +9,8 @@ namespace Tabel.ViewModels.ProjectReport
 
 
         public List<string> MyColumns { get; set; }
+
+        public List<string> Projects { get; set; }
     }
 
     public class PrProjectViewModel

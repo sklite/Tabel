@@ -8,6 +8,8 @@ namespace Tabel.ViewModels
     {
         public List<ErEmployeeViewModel> Rows { get; set; }
 
+        public List<string> Employees { get; set; }
+
 
         public List<string> MyColumns { get; set; } 
     }

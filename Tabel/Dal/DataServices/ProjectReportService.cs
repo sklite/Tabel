@@ -209,13 +209,11 @@ namespace Tabel.Dal.DataServices
             }
 
 
+            result.Projects = allProjects.ToList();
+            result.Projects.Insert(0, "Все");
 
-            //result.Rows.Add(new PrProjectViewModel(totalMoney)
-            //{
-            //    Hours = totalHoursDict.Values.ToList(),
-            //    ProjectName = "Итого",
-            //    // Project = "По всем проектам"
-            //});
+            if (!string.IsNullOrEmpty(ProjectFilter) && ProjectFilter != "Все")
+                result.Rows.RemoveAll(item => item.ProjectName != ProjectFilter);
 
             return result;
         }
@@ -228,6 +226,8 @@ namespace Tabel.Dal.DataServices
         public DateTime DateBegin { get; set; }
 
         public DateTime DateEnd { get; set; }
+
+        public string ProjectFilter { get; set; }
     }
 
     class PrReportProject
