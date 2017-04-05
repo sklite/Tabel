@@ -213,7 +213,7 @@ namespace Tabel.Dal.DataServices
             result.Projects.Insert(0, "Все");
 
             if (!string.IsNullOrEmpty(ProjectFilter) && ProjectFilter != "Все")
-                result.Rows.RemoveAll(item => item.ProjectName != ProjectFilter);
+                result.Rows.RemoveAll(item => item.ProjectCode != ProjectFilter);
 
             return result;
         }

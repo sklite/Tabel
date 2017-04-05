@@ -12,12 +12,12 @@ namespace Tabel.Dal
         public DbSet<Role> Roles { get; set; }
         public DbSet<Timesheet> Timesheets { get; set; }
 
-//#if Release
-        //public TabelContext() : base("Tabel")
-        //{
+        //#if Release
+        public TabelContext() : base("Tabel")
+        {
 
-        //}
-//#endif
+        }
+        //#endif
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Employee>().ToTable("Employees");
